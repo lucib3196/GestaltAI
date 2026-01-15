@@ -6,7 +6,7 @@ import asyncio
 
 load_dotenv()
 
-client = get_client(url = "https://cloudtest2-372e7c35e8c95922a80b43de91a4b917.us.langgraph.app", api_key=os.getenv("LANGSMITH_API_KEY"))
+client = get_client(url = "https://gestaltai-146ee200f93f5d6688814feed1edce29.us.langgraph.app", api_key=os.getenv("LANGSMITH_API_KEY"))
 
 st.set_page_config(page_title="LangGraph Streaming", layout="centered")
 st.title("🧠 LangGraph Streaming Chat")
