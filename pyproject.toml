@@ -1,22 +1,25 @@
-[tool.poetry]
-name = "gestaltai"
+[project]
+name = "GestaltAI"
 version = "0.1.0"
 description = ""
-authors = ["Luciano Bermudez <lucianobmecheng69@gmail.com>"]
+authors = [
+    {name = "Luciano Bermudez",email = "lucianobmecheng69@gmail.com"}
+]
 package-mode = false
 readme = "README.md"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "graphrag (>=2.7.0,<3.0.0)",
+    "ipykernel (>=7.1.0,<8.0.0)",
+    "langchain (>=1.2.4,<2.0.0)",
+    "langchain-core (>=1.2.7,<2.0.0)",
+    "langchain-text-splitters (>=1.1.0,<2.0.0)",
+    "langchain-openai (>=1.1.7,<2.0.0)",
+    "python-dotenv (>=1.2.1,<2.0.0)",
+    "streamlit (>=1.53.0,<2.0.0)",
+    "langgraph-sdk (>=0.3.3,<0.4.0)"
+]
 
-[tool.poetry.dependencies]
-python = ">=3.12,<3.13"
-graphrag = "^2.7.0"
-ipykernel = "^7.1.0"
-langchain = "^1.2.4"
-langchain-core = "^1.2.7"
-langchain-text-splitters = "^1.1.0"
-langchain-openai = "^1.1.7"
-python-dotenv = "^1.2.1"
-streamlit = "^1.53.0"
-langgraph-sdk = "^0.3.3"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
