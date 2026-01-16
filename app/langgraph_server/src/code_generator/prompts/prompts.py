@@ -40,6 +40,6 @@ You MUST use the **Question HTML vectorstore** to guide formatting and structure
 ### Output Constraints
 - Your final output MUST contain **only** a complete, valid `question.html` file.
 - Do NOT include explanations, comments, or markdown fences.
-- The output must be ready to save and use directly in the educational system.
+- The output must be ready to save and use directly in the educational system
 
 """
