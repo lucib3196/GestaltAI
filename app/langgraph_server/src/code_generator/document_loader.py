@@ -12,7 +12,7 @@ class QuestionModuleDocumentLoader(BaseLoader):
         output_col: str,
         file_path: (
             str | Path
-        ) = r"src/code_generator/data/QuestionDataV2_06122025_classified.csv",
+        ) = r"langgraph_server/src/code_generator/data/QuestionDataV2_06122025_classified.csv",
     ):
         self.file_path = Path(file_path).resolve()
         if not self.file_path.exists():
@@ -32,14 +32,17 @@ class QuestionModuleDocumentLoader(BaseLoader):
             content_string = f"""Input Example: {input_example}
                 Output Example: {output_example}
                 """
-
+            doc_id = f"{Path(self.file_path).stem}:{index}:{self.example_input}->{self.example_output}"
             yield Document(
+                id=doc_id,
                 page_content=content_string,
                 metadata={
                     "source": Path(self.file_path).name,
                     "index": index,
                     "isAdaptive": bool(self.df.loc[index, "isAdaptive"]),
                     "output_is_nan": pd.isna(output_example),
+                    "input_col": self.example_input,
+                    "output_col": self.example_output,
                 },
             )
 
@@ -67,7 +70,7 @@ class QuestionModuleDocumentLoader(BaseLoader):
 
 if __name__ == "__main__":
     csv_path = Path(
-        r"src/code_generator/data/QuestionDataV2_06122025_classified.csv"
+        r"langgraph_server/src/code_generator/data/QuestionDataV2_06122025_classified.csv"
     ).resolve()
     loader = QuestionModuleDocumentLoader(
         file_path=csv_path, input_col="question", output_col="server.js"
@@ -75,6 +78,7 @@ if __name__ == "__main__":
     loader.prepare_data()
     docs = list(loader.lazy_load())
     print(f"Loaded {len(docs)} documents.\n")
-    for doc in docs:
-        print(type(doc))
-        print(doc)
+    # for doc in docs:
+    #     print(type(doc))
+    #     print(doc)
+    print(docs[0])

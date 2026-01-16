@@ -60,7 +60,7 @@ else:
 
 class State(TypedDict):
     question: Question
-    question_type: question_types
+    isAdaptive: bool
     server_js: str | None
 
     retrieved_documents: Annotated[List[Document], operator.add]
@@ -68,11 +68,15 @@ class State(TypedDict):
 
 
 def retrieve_examples(state: State) -> Command[Literal["generate_code"]]:
-    isAdaptive = False
-    if state["question_type"] == "computational":
-        isAdaptive = True
+
     retriever = vector_store.as_retriever(
-        search_type="similarity", kwargs={"isAdaptive": isAdaptive}, k=2
+        search_type="similarity",
+        kwargs={
+            "isAdaptive": state["isAdaptive"],
+            "input_col": "question.html",
+            "output_col": "server.js",
+        },
+        k=2,
     )
 
     question_html = state["question"].question_html
@@ -194,7 +198,7 @@ if __name__ == "__main__":
     )
     input_state: State = {
         "question": question,
-        "question_type": "computational",
+        "isAdaptive": False,
         "server_js": None,
         "retrieved_documents": [],
         "formatted_examples": "",
@@ -203,7 +207,7 @@ if __name__ == "__main__":
     print(result["server_js"])
 
     # Save output
-    output_path = Path(r"src/ai_processing/code_generator/outputs/server_js")
+    output_path = Path(r"langgraph_server/src/code_generator/outputs/server_js")
     save_graph_visualization(app, output_path, filename="graph.png")
     data_path = output_path / "output.json"
     data_path.write_text(json.dumps(to_serializable(result)))

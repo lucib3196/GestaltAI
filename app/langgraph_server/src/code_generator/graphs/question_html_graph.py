@@ -56,7 +56,13 @@ class State(TypedDict):
 
 def retrieve_examples(state: State) -> Command[Literal["generate_code"]]:
     retriever = vector_store.as_retriever(
-        search_type="similarity", kwargs={"isAdaptive": state["isAdaptive"]}, k=2
+        search_type="similarity",
+        kwargs={
+            "isAdaptive": state["isAdaptive"],
+            "input_col": "question",
+            "output_col": "question.html",
+        },
+        k=2,
     )
     question_text = state["question"].question_text
     results = retriever.invoke(question_text)
@@ -111,7 +117,7 @@ if __name__ == "__main__":
     print(result["question_html"])
 
     # Save output
-    output_path = Path(r"src/code_generator/outputs")
+    output_path = Path(r"langgraph_server/src/code_generator/outputs/question_html")
     save_graph_visualization(app, output_path, filename="question_html_graph.png")
     data_path = output_path / "output.json"
     data_path.write_text(json.dumps(to_serializable(result)))
