@@ -7,6 +7,8 @@ from chat_modes import (
     ChatOption,
 )
 from client import stream_langgraph, client
+from pathlib import Path
+
 
 settings = get_settings()
 
@@ -129,3 +131,20 @@ if user_input:
             st.session_state.messages.append({"role": "assistant", "content": buffer})
 
     run_async_stream(consume())
+
+
+OUTPUT_DIR = Path("static").resolve()
+OUTPUT_DIR.mkdir(exist_ok=True)
+if st.button("Generate file"):
+    path = OUTPUT_DIR / "example.txt"
+    path.write_text("Hello from the LLM!")
+
+st.divider()
+st.header("Downloads")
+for file in OUTPUT_DIR.glob("*"):
+    with open(file, "rb") as f:
+        st.download_button(
+            f"Download {file.name}",
+            data=f,
+            file_name=file.name,
+        )

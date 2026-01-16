@@ -4,6 +4,7 @@ from src.code_generator.graphs.question_html_graph import (
 )
 from src.code_generator.models import Question
 from langchain_core.documents import Document
+from src.ai_tools.ai_tools import save_file
 
 # --- LangChain & OpenAI ---
 from langchain.agents import create_agent
@@ -71,7 +72,7 @@ def generate_question_html(question: str, computational: bool):
     return html, retrieved_context
 
 
-tools = [generate_question_html]
+tools = [generate_question_html, save_file]
 
 agent = create_agent(
     model,

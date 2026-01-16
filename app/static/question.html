@@ -1,0 +1,24 @@
+<pl-question-panel size="large">
+  <p>
+    A car accelerates uniformly from rest to a speed of
+    <pl-symbolic-input expected-value="v_f">30</pl-symbolic-input> m/s in
+    <pl-symbolic-input expected-value="t">10</pl-symbolic-input> seconds.
+    Calculate the total distance traveled by the car during this time.
+  </p>
+  <p>
+    The formula to calculate distance traveled with constant acceleration is
+    given by:
+  </p>
+  <p>\( d = \frac{1}{2} v_i t + \frac{1}{2} a t^2 \)</p>
+  <p>
+    where \( v_i \) is the initial velocity (0 m/s), \( v_f \) is the final
+    velocity, \( a \) is the acceleration, and \( t \) is the time. Solve for \(
+    d \).
+  </p>
+  <pl-number-input
+    answers-name="distance"
+    comparison="exact"
+    digits="4"
+    label="Enter distance (m)"
+  ></pl-number-input>
+</pl-question-panel>
