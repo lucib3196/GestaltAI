@@ -23,27 +23,33 @@ model = init_chat_model(
 @tool
 def generate_question_html(question: str, computational: bool):
     """
-    Retrieve high-quality question HTML examples from the Question vectorstore.
+    Generate a formatted `question.html` file using established HTML conventions,
+    grounded in examples retrieved from the Question HTML vectorstore.
 
-    This tool takes a *complete natural-language question* as input and returns:
-    - HTML question templates
-    - Structuring patterns
-    - Input components
-    - Accepted formatting styles
-    - Common panel layouts and markup conventions
+    This tool takes a **complete, finalized natural-language question** and a flag
+    indicating whether the question is **computational** or **non-computational**.
+
+    It returns TWO things:
+    1. A fully formatted `question.html` file that follows the platform’s
+       structural, semantic, and stylistic conventions.
+    2. The set of retrieved reference documents used to guide the formatting
+       and structure (for grounding, inspection, or debugging).
+
+    When presenting results to the end user, you MAY display **only** the generated
+    `question.html` content. The retrieved documents are provided for internal
+    reference and should not be surfaced unless explicitly requested.
 
     Use this tool when:
-    - You are generating a new question.html file.
-    - You need reference examples for how question files are structured.
-    - You want to follow established formatting patterns, HTML structure,
-      or input/parameter styles used in previous questions.
+    - You are converting a finalized question stub into `question.html`.
+    - You need grounded examples to ensure correct HTML structure and layout.
+    - You want to follow existing input, panel, and markup conventions exactly.
 
-    The retrieved examples should guide the final HTML output, ensuring
-    the generated question.html file is consistent, readable, and aligned
-    with existing patterns in the system.
+    The retrieved examples MUST guide the formatting of the output, but MUST NOT
+    be copied verbatim. The final HTML should be original, clean, and ready for
+    direct use in the educational system.
     """
     q = Question(
-        question_text="A car is traveling along a straight rode at a constant speed of 100mph for 5 hours calculate the total distance traveled",
+        question_text=question,
         solution_guide=None,
         final_answer=None,
         question_html="",
@@ -60,7 +66,7 @@ def generate_question_html(question: str, computational: bool):
         "formatted_examples": "",
     }
     result = question_html_tool.invoke(input_state)
-    html = {"question_topics": result.get("question_html")}
+    html = {"question_html": result.get("question_html")}
     retrieved_context: List[Document] = result.get("retrieved_documents", [])
     return html, retrieved_context
 

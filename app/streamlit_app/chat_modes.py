@@ -31,19 +31,18 @@ CHAT_OPTIONS: Dict[CHAT_NAMES, ChatOption] = {
         label="Module Builder (Text)",
         url="/moc/module-builder",
         description="Generate a complete multi-file module from text input.",
-
     ),
     "module_builder_image": ChatOption(
         label="Module Builder (Image)",
         url="/moc/module-builder",
         description="Generate a complete multi-file module from image input.",
-        mode="file"
+        mode="file",
     ),
     "file_generator": ChatOption(
         label="Single File Generator",
-        url="/moc/file-generator",
+        url="agent_gestalt",
         description="Generate a specific file with focused functionality.",
-        mode="file"
+        mode="file",
     ),
     "question_classifier": ChatOption(
         label="Question Classifier",
