@@ -2,7 +2,7 @@
   "$schema": "https://langgra.ph/schema.json",
   "dependencies": ["."],
   "graphs": {
-    "question_classification": "langgraph_server/src/question_classification/agent.py:agent"
+    "question_classification": "src/question_classification/agent.py:agent"
   },
   "env": ".env",
   "image_distro": "wolfi"
