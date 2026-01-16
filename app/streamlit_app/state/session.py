@@ -1,10 +1,11 @@
 import streamlit as st
 from app.streamlit_app.services.llm_service import initialize_thread_id
+from chat_modes import CHAT_OPTIONS
 
 DEFAULT_STATE = {
     "messages": [],
     "thread_id": initialize_thread_id(),
-    "chat_select": "file_generator",
+    "chat_select": CHAT_OPTIONS["file_generator"],
 }
 
 
