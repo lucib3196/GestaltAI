@@ -2,6 +2,7 @@ from langchain.tools import tool
 from langchain.agents import create_agent
 from langchain.chat_models import init_chat_model
 from src.question_classification.graph import app, State as CState
+
 model = init_chat_model(
     model="gpt-4o",
     model_provider="openai",
