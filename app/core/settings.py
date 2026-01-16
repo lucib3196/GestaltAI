@@ -7,6 +7,8 @@ from pathlib import Path
 
 ENV = Literal["local", "production"]
 
+APP_ROOT = Path(__file__).resolve().parents[1]
+
 
 class AppSettings(BaseSettings):
     """
@@ -72,5 +74,9 @@ def get_settings() -> AppSettings:
     return AppSettings(
         langgraph_production_url=os.getenv("langgraph_production", ""),
         langsmith_api_key=os.getenv("LANGSMITH_API_KEY", ""),
-        output_path=Path("output_downloads").absolute(),
+        output_path=Path(APP_ROOT / "output_downloads").resolve(),
     )
+
+
+if __name__ == "__main__":
+    print(get_settings())

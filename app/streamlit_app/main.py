@@ -128,12 +128,8 @@ if user_input:
     run_async_stream(consume())
 
 
-OUTPUT_DIR = Path("static").resolve()
+OUTPUT_DIR = Path(settings.output_path).resolve()
 OUTPUT_DIR.mkdir(exist_ok=True)
-if st.button("Generate file"):
-    path = OUTPUT_DIR / "example.txt"
-    path.write_text("Hello from the LLM!")
-
 st.divider()
 st.header("Downloads")
 for file in OUTPUT_DIR.glob("*"):

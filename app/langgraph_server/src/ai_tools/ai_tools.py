@@ -1,6 +1,6 @@
 from pathlib import Path
 from langchain.tools import tool
-from core.settings import get_settings
+from app.core.settings import get_settings
 
 
 output = get_settings().output_path

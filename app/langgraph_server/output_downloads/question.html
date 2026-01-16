@@ -1,0 +1,14 @@
+<pl-question-panel size="large">
+    <p>A cannonball is fired from a cannon at an angle of 45 degrees with an initial velocity of {params.initial_velocity} m/s.</p>
+    <p>Assuming no air resistance, calculate:</p>
+    <ol>
+        <li>The total time the cannonball is in the air.</li>
+        <li>The maximum height reached by the cannonball.</li>
+        <li>The horizontal distance traveled by the cannonball (range).</li>
+    </ol>
+    <p>Use the acceleration due to gravity g = {params.gravity} m/s<sup>2</sup>.</p>   
+</pl-question-panel>
+
+<pl-number-input answers-name="TimeInAir" comparison="sigfig" digits="3" label="Total time in air (s) ="></pl-number-input>
+<pl-number-input answers-name="MaxHeight" comparison="sigfig" digits="3" label="Maximum height (m) ="></pl-number-input>
+<pl-number-input answers-name="Range" comparison="sigfig" digits="3" label="Horizontal distance (m) ="></pl-number-input>
