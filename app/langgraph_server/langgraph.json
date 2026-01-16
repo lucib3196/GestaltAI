@@ -1,6 +1,6 @@
 {
   "$schema": "https://langgra.ph/schema.json",
-  "dependencies": ["."],
+  "dependencies": ["requirements.txt"],
   "graphs": {
     "question_classification": "./src/question_classification/agent.py:agent",
     "agent_gestalt": "./src/code_generator/agents/agent_simple.py:agent"
