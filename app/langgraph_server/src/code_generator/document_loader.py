@@ -6,7 +6,14 @@ import pandas as pd
 
 
 class QuestionModuleDocumentLoader(BaseLoader):
-    def __init__(self, file_path: str | Path, input_col: str, output_col: str):
+    def __init__(
+        self,
+        input_col: str,
+        output_col: str,
+        file_path: (
+            str | Path
+        ) = r"src/code_generator/data/QuestionDataV2_06122025_classified.csv",
+    ):
         self.file_path = Path(file_path).resolve()
         if not self.file_path.exists():
             raise ValueError(f"Filepath {self.file_path} does not exist")
@@ -62,7 +69,9 @@ if __name__ == "__main__":
     csv_path = Path(
         r"src/code_generator/data/QuestionDataV2_06122025_classified.csv"
     ).resolve()
-    loader = QuestionModuleDocumentLoader(csv_path, "question", "server.js")
+    loader = QuestionModuleDocumentLoader(
+        file_path=csv_path, input_col="question", output_col="server.js"
+    )
     loader.prepare_data()
     docs = list(loader.lazy_load())
     print(f"Loaded {len(docs)} documents.\n")

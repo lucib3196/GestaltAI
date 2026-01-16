@@ -1,6 +1,14 @@
-from langgraph.graph.state import CompiledStateGraph
+# --- Standard Library ---
+from datetime import date, datetime, time
 from pathlib import Path
 from typing import Any
+from uuid import UUID
+
+# --- Third-Party Libraries ---
+from pydantic import BaseModel
+
+# --- LangGraph ---
+from langgraph.graph.state import CompiledStateGraph
 
 
 def write_image_data(image_bytes: bytes, folder_path: str | Path, filename: str) -> str:
@@ -33,3 +41,26 @@ def save_graph_visualization(
         raise
     except Exception as error:
         print(f"❌ Graph visualization failed: {error}")
+
+
+def to_serializable(obj: Any) -> Any:
+    """
+    Recursively convert Pydantic models (and nested dicts/lists thereof)
+    into plain Python data structures.
+    """
+    if isinstance(obj, BaseModel):
+        return obj.model_dump()
+    if isinstance(obj, dict):
+        return {k: to_serializable(v) for k, v in obj.items()}
+    if isinstance(obj, list):
+        return [to_serializable(v) for v in obj]
+
+    # --- Special cases ---
+    if isinstance(obj, (datetime, date, time)):
+        return obj.isoformat()
+    if isinstance(obj, UUID):
+        return str(obj)
+    if isinstance(obj, Path):
+        return obj.as_posix()
+
+    return obj
