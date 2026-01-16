@@ -4,7 +4,7 @@ from langgraph_sdk import get_client
 from dotenv import load_dotenv
 import asyncio
 from typing import Literal
-from config import OPTIONS, CHAT_NAMES, CHAT_OPTIONS
+from config import OPTIONS, CHAT_NAMES, CHAT_OPTIONS, ChatOption
 
 
 client = get_client(
@@ -25,7 +25,7 @@ def handle_chatbot_change():
 
 
 if "chat_data" in st.session_state:
-    chat_data = st.session_state.chat_data
+    chat_data: ChatOption = st.session_state.chat_data
 
     st.subheader(chat_data.label)
     st.write(chat_data.description)
@@ -38,6 +38,14 @@ st.selectbox(
     placeholder="Select Chat Mode...",
     on_change=handle_chatbot_change,
 )
+
+if "chat_data" in st.session_state:
+    chat_data: ChatOption = st.session_state.chat_data
+    if chat_data.mode == "file":
+        uploaded_file = st.file_uploader("Choose a file")
+        if uploaded_file is not None:
+            bytes_data = uploaded_file.getvalue()
+            st.write(bytes_data)
 
 
 def run_async_stream(coro):
