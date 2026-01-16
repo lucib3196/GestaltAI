@@ -3,6 +3,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 from functools import lru_cache
 from typing import Literal
 import os
+from pathlib import Path
 
 ENV = Literal["local", "production"]
 
@@ -34,6 +35,9 @@ class AppSettings(BaseSettings):
     )
 
     langsmith_api_key: str = Field(..., description="LangSmith API key")
+    output_path: str | Path = Field(
+        ..., description="Location to save any generated content"
+    )
 
     # -------------------------------------------------
     # Derived / computed values
@@ -51,7 +55,7 @@ class AppSettings(BaseSettings):
     # Pydantic config
     # -------------------------------------------------
     model_config = SettingsConfigDict(
-        env_file=".env",
+        env_file="../.env",
         env_file_encoding="utf-8",
         extra="ignore",
     )
@@ -68,4 +72,5 @@ def get_settings() -> AppSettings:
     return AppSettings(
         langgraph_production_url=os.getenv("langgraph_production", ""),
         langsmith_api_key=os.getenv("LANGSMITH_API_KEY", ""),
+        output_path=Path("output_downloads").absolute(),
     )

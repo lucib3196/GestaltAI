@@ -1,7 +1,7 @@
 from typing import Literal
 from pydantic import BaseModel, Field
 from typing import List, Literal
-from src.models.models import CodeResponse
+from langgraph_server.src.models.models import CodeResponse
 
 allowed_files = Literal["question.html", "solution.html", "server.js", "server.py"]
 question_types = Literal[

@@ -1,7 +1,10 @@
 from pathlib import Path
 from langchain.tools import tool
+from core.settings import get_settings
 
-OUTPUT_DIR = Path(r"./static").resolve()
+
+output = get_settings().output_path
+OUTPUT_DIR = Path(output).resolve()
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
 

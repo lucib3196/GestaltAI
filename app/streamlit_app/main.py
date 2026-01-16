@@ -1,6 +1,6 @@
 import asyncio
 import streamlit as st
-from settings import get_settings
+from app.core.settings import get_settings
 from chat_modes import (
     OPTIONS,
     CHAT_OPTIONS,

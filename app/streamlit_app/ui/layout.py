@@ -1,6 +1,6 @@
 import streamlit as st
 from chat_modes import CHAT_OPTIONS
-from settings import ENV
+from app.core.settings import ENV
 
 
 def render_title(env: ENV, thread_id: str | None = None):
