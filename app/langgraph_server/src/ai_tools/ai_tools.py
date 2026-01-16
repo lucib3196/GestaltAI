@@ -1,7 +1,7 @@
 from pathlib import Path
 from langchain.tools import tool
 
-OUTPUT_DIR = Path(r"../static").resolve().mkdir(exist_ok=True)
+OUTPUT_DIR = Path(r"../static").resolve()
 
 
 @tool

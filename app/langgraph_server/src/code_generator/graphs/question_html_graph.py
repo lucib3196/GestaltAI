@@ -1,25 +1,16 @@
-# --- Standard Library ---
 import json
 import operator
 import os
 from pathlib import Path
 from typing import Annotated, List, Literal, TypedDict
-
-# --- Local / Project Models ---
-from src.code_generator.models import CodeResponse, Question, question_types
-
-# --- LangChain Integrations ---
+from src.code_generator.models import Question, CodeResponse
 from langchain_openai import OpenAIEmbeddings
 from langchain_astradb import AstraDBVectorStore
 from langchain.chat_models import init_chat_model
 from langchain_core.documents import Document
 from langchain_core.prompts import ChatPromptTemplate
-
-# --- LangGraph ---
 from langgraph.graph import END, START, StateGraph
 from langgraph.types import Command
-
-# --- Project Utilities ---
 from src.utils.utils import save_graph_visualization, to_serializable
 
 

@@ -1,7 +1,7 @@
 from typing import Literal
 from pydantic import BaseModel, Field
 from typing import List, Literal
-
+from models.models import CodeResponse
 
 allowed_files = Literal["question.html", "solution.html", "server.js", "server.py"]
 question_types = Literal[
@@ -21,11 +21,6 @@ class Question(BaseModel):
     final_answer: str | None
     question_html: str
 
-
-class CodeResponse(BaseModel):
-    """Output schema from the LLM for code generation."""
-
-    code: str = Field(..., description="The generated code. Only return the code.")
 
 
 class ExtractedQuestion(BaseModel):
