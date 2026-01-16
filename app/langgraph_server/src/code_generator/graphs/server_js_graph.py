@@ -27,7 +27,7 @@ from langgraph_server.src.code_validation.graph import (
 )
 
 # --- Project Utilities ---
-from src.utils.utils import (
+from langgraph_server.src.utils.utils import (
     save_graph_visualization,
     to_serializable,
     extract_langsmith_prompt,
