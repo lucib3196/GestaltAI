@@ -1,14 +1,26 @@
 <pl-question-panel size="large">
-  <p>Consider a mass-spring system. A mass of <strong>{params.mass}</strong> kg is attached to a spring. When the mass is displaced by <strong>{params.displacement}</strong> meters from its equilibrium position and released, it undergoes simple harmonic motion. Calculate the spring constant (k) of the spring if the period of oscillation is <strong>{params.period}</strong> seconds.</p>
+  <p>
+    Consider a mass-spring system. A mass of <strong>{params.mass}</strong> kg
+    is attached to a spring. When the mass is displaced by
+    <strong>{params.displacement}</strong> meters from its equilibrium position
+    and released, it undergoes simple harmonic motion. Calculate the spring
+    constant (k) of the spring if the period of oscillation is
+    <strong>{params.period}</strong> seconds.
+  </p>
 
-  <pl-number-input answers-name="springConstant" comparison="exact" digits="3" label="Spring constant (k) in N/m" />
+  <pl-number-input
+    answers-name="springConstant"
+    comparison="exact"
+    digits="3"
+    label="Spring constant (k) in N/m"
+  />
 </pl-question-panel>
 
 <script>
-// Assuming a JavaScript environment or platform to dynamically assign these values
-let params = {
+  // Assuming a JavaScript environment or platform to dynamically assign these values
+  let params = {
     mass: 5,
     displacement: 0.1,
-    period: 2
-};
+    period: 2,
+  };
 </script>

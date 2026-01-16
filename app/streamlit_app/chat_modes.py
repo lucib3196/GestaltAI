@@ -24,6 +24,7 @@ class ChatOption(BaseModel):
     url: str
     description: str
     mode: ALLOWED_MODE = "text"
+    active: bool = False
 
 
 CHAT_OPTIONS: Dict[CHAT_NAMES, ChatOption] = {
@@ -42,11 +43,13 @@ CHAT_OPTIONS: Dict[CHAT_NAMES, ChatOption] = {
         label="Single File Generator",
         url="agent_gestalt",
         description="Generate a specific file with focused functionality.",
+        active=True,
     ),
     "question_classifier": ChatOption(
         label="Question Classifier",
         url="question_classification",
         description="Classify question type and intent.",
+        active=True,
     ),
     "course_classifier": ChatOption(
         label="Course Classifier",

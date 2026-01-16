@@ -8,9 +8,17 @@ from chat_modes import (
 )
 from client import stream_langgraph, client
 from pathlib import Path
-
+from app.streamlit_app.ui.layout import render_sidebar, render_title
 
 settings = get_settings()
+
+
+def render_ui():
+    render_title(settings.environment)
+    render_sidebar()
+
+
+render_ui()
 
 
 def get_loop():
@@ -43,19 +51,6 @@ if "thread_id" not in st.session_state:
 
 if "messages" not in st.session_state:
     st.session_state.messages = []
-
-
-if settings.environment == "local":
-    # st.session_state.thread_id
-    title = f"Gestalt AI (Local)"
-    if st.session_state.thread_id:
-        title += str(st.session_state.thread_id)
-else:
-    title = "Gestalt AI"
-
-
-st.set_page_config(page_title=title, layout="centered")
-st.title(title)
 
 
 def handle_chatbot_change():

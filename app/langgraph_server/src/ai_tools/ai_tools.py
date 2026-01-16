@@ -1,8 +1,9 @@
 from pathlib import Path
 from langchain.tools import tool
 
-OUTPUT_DIR = Path(r"../static").resolve()
+OUTPUT_DIR = Path(r"./static").resolve()
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+
 
 @tool
 def save_file(filename: str, content: str) -> str:

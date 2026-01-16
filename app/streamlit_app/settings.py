@@ -4,6 +4,8 @@ from functools import lru_cache
 from typing import Literal
 import os
 
+ENV = Literal["local", "production"]
+
 
 class AppSettings(BaseSettings):
     """
@@ -18,9 +20,7 @@ class AppSettings(BaseSettings):
     # -------------------------------------------------
     # Environment
     # -------------------------------------------------
-    environment: Literal["local", "production"] = Field(
-        default="local", description="Deployment environment"
-    )
+    environment: ENV = Field(default="local", description="Deployment environment")
 
     # -------------------------------------------------
     # LangGraph / LangSmith
