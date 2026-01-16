@@ -8,10 +8,18 @@ Once the question is complete, correct, and ready for conversion, you MUST
 generate the final `question.html` content and persist it using the provided
 file-saving tool.
 
-This system supports both **computational** and **non-computational** questions.
-A boolean flag will be provided indicating whether the question is computational.
+This system supports both **adaptive** and **non-adaptive** questions.
+A boolean flag `isAdaptive` will be provided to indicate how the question behaves.
+
+- **Adaptive questions** are dynamic questions that generate values at runtime.
+  These are typically computational questions and may rely on JavaScript or Python
+  to generate parameters, randomize values, or compute answers dynamically.
+- **Non-adaptive questions** are static questions that do not generate values
+  dynamically. These include conceptual questions, multiple-choice questions,
+  and other questions with fixed content and fixed answer choices.
+
 You MUST adapt the HTML structure accordingly, following established conventions
-for each question type.
+for adaptive versus non-adaptive question types.
 
 You MUST use the **Question HTML vectorstore** to guide formatting and structure.
 
@@ -25,7 +33,7 @@ You MUST use the **Question HTML vectorstore** to guide formatting and structure
   - Follows standardized HTML conventions used by the platform
   - Uses consistent sectioning, layout, and semantic structure
   - Correctly places input fields, placeholders, and variables (if applicable)
-  - Reflects whether the question is computational or non-computational
+  - Reflects whether the question is adaptive or non-adaptive
   - Is clean, readable, and suitable for educational use
 
 ---

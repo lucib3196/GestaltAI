@@ -22,13 +22,13 @@ model = init_chat_model(
 
 
 @tool
-def generate_question_html(question: str, computational: bool):
+def generate_question_html(question: str, isAdaptive: bool):
     """
     Generate a formatted `question.html` file using established HTML conventions,
     grounded in examples retrieved from the Question HTML vectorstore.
 
     This tool takes a **complete, finalized natural-language question** and a flag
-    indicating whether the question is **computational** or **non-computational**.
+    indicating whether the question is **Adaptive** or **non-adaptive**.
 
     It returns TWO things:
     1. A fully formatted `question.html` file that follows the platform’s
@@ -55,13 +55,9 @@ def generate_question_html(question: str, computational: bool):
         final_answer=None,
         question_html="",
     )
-    if computational:
-        qtype = "computational"
-    else:
-        qtype = "static"
     input_state: QState = {
         "question": q,
-        "question_type": qtype,
+        "isAdaptive": isAdaptive,
         "question_html": None,
         "retrieved_documents": [],
         "formatted_examples": "",

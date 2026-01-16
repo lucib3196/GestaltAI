@@ -56,7 +56,7 @@ else:
 
 class State(TypedDict):
     question: Question
-    question_type: question_types
+    isAdaptive: bool
     question_html: str | None
 
     retrieved_documents: Annotated[List[Document], operator.add]
@@ -64,15 +64,10 @@ class State(TypedDict):
 
 
 def retrieve_examples(state: State) -> Command[Literal["generate_code"]]:
-    isAdaptive = False
-    if state["question_type"] == "computational":
-        isAdaptive = True
     retriever = vector_store.as_retriever(
-        search_type="similarity", kwargs={"isAdaptive": isAdaptive}, k=2
+        search_type="similarity", kwargs={"isAdaptive": state["isAdaptive"]}, k=2
     )
     question_text = state["question"].question_text
-    # If the question html is none default to the other case
-
     results = retriever.invoke(question_text)
     # Format docs
     formatted_docs = "\n".join(p.page_content for p in results)
@@ -116,7 +111,7 @@ if __name__ == "__main__":
     )
     input_state: State = {
         "question": question,
-        "question_type": "computational",
+        "isAdaptive": False,
         "question_html": None,
         "retrieved_documents": [],
         "formatted_examples": "",
