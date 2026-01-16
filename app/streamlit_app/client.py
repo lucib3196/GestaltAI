@@ -11,14 +11,16 @@ from chat_modes import (
 
 settings = get_settings()
 
-client = get_client(
-    url=settings.langgraph_local_url,
-    api_key=settings.langsmith_api_key,
-)
-
-
-
-
+if settings.environment == "local":
+    client = get_client(
+        url=settings.langgraph_local_url,
+        api_key=settings.langsmith_api_key,
+    )
+else:
+    client = get_client(
+        url=settings.langgraph_production_url,
+        api_key=settings.langsmith_api_key,
+    )
 
 async def stream_langgraph(messages, thread_id: str | None, assistant_id: str):
     async for chunk in client.runs.stream(
@@ -33,11 +35,10 @@ async def stream_langgraph(messages, thread_id: str | None, assistant_id: str):
         if not model_data:
             continue
         messages_list = model_data.get("messages", [])
-        
+
         if not messages_list:
             continue
         last_msg = messages_list[-1]
         print("Last message in stream", last_msg)
         if last_msg:
             yield last_msg
-
