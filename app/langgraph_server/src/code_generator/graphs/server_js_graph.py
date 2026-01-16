@@ -78,6 +78,7 @@ def retrieve_examples(state: State) -> Command[Literal["generate_code"]]:
             "isAdaptive": state["isAdaptive"],
             "input_col": "question.html",
             "output_col": "server.js",
+            "output_is_nan": False,
         },
         k=2,
     )
