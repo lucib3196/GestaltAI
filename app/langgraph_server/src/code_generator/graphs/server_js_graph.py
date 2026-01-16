@@ -6,7 +6,10 @@ from pathlib import Path
 from typing import Annotated, List, Literal, TypedDict
 
 # --- Local / Project Models ---
-from src.code_generator.models import Question, question_types, CodeResponse
+from langgraph_server.src.code_generator.models import (
+    Question,
+    CodeResponse,
+)
 
 # --- LangChain Integrations ---
 from langchain_openai import OpenAIEmbeddings
@@ -18,7 +21,7 @@ from langchain_core.prompts import ChatPromptTemplate
 # --- LangGraph ---
 from langgraph.graph import END, START, StateGraph
 from langgraph.types import Command
-from code_validation.graph import (
+from langgraph_server.src.code_validation.graph import (
     State as CodeValidationState,
     graph as code_validation_graph,
 )
