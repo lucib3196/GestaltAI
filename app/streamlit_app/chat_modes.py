@@ -11,11 +11,11 @@ CHAT_NAMES = Literal[
     "course_classifier",
 ]
 OPTIONS: List[CHAT_NAMES] = [
-    "module_builder_text",
-    "module_builder_image",
+    # "module_builder_text",
+    # "module_builder_image",
     "question_classifier",
     "file_generator",
-    "course_classifier",
+    # "course_classifier",
 ]
 
 
@@ -42,7 +42,6 @@ CHAT_OPTIONS: Dict[CHAT_NAMES, ChatOption] = {
         label="Single File Generator",
         url="agent_gestalt",
         description="Generate a specific file with focused functionality.",
-        mode="file",
     ),
     "question_classifier": ChatOption(
         label="Question Classifier",
