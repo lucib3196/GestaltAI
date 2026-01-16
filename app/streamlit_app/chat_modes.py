@@ -47,7 +47,7 @@ CHAT_OPTIONS: Dict[CHAT_NAMES, ChatOption] = {
     ),
     "question_classifier": ChatOption(
         label="Question Classifier",
-        url="/moc/classification",
+        url="question_classification",
         description="Classify question type and intent.",
     ),
     "course_classifier": ChatOption(

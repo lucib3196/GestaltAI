@@ -1,19 +1,59 @@
-import streamlit as st
-import os
-from langgraph_sdk import get_client
-from dotenv import load_dotenv
 import asyncio
-from typing import Literal
-from config import OPTIONS, CHAT_NAMES, CHAT_OPTIONS, ChatOption
-
-
-client = get_client(
-    url="https://gestaltai-146ee200f93f5d6688814feed1edce29.us.langgraph.app",
-    api_key=os.getenv("LANGSMITH_API_KEY"),
+import streamlit as st
+from settings import get_settings
+from chat_modes import (
+    OPTIONS,
+    CHAT_OPTIONS,
+    ChatOption,
 )
+from client import stream_langgraph, client
 
-st.set_page_config(page_title="Gestalt AI", layout="centered")
-st.title("Gestalt AI")
+settings = get_settings()
+
+
+def get_loop():
+    if "event_loop" not in st.session_state:
+        loop = asyncio.new_event_loop()
+        st.session_state.event_loop = loop
+    else:
+        loop = st.session_state.event_loop
+        if loop.is_closed():
+            loop = asyncio.new_event_loop()
+            st.session_state.event_loop = loop
+
+    asyncio.set_event_loop(loop)
+    return loop
+
+
+async def get_thread_id():
+    return await client.threads.create()
+
+
+def run_async_stream(coro):
+    loop = get_loop()
+    return loop.run_until_complete(coro)
+
+
+# Basic Set up
+if "thread_id" not in st.session_state:
+    thread = run_async_stream(get_thread_id())
+    st.session_state.thread_id = thread["thread_id"]
+
+if "messages" not in st.session_state:
+    st.session_state.messages = []
+
+
+if settings.environment == "local":
+    # st.session_state.thread_id
+    title = f"Gestalt AI (Local)"
+    if st.session_state.thread_id:
+        title += str(st.session_state.thread_id)
+else:
+    title = "Gestalt AI"
+
+
+st.set_page_config(page_title=title, layout="centered")
+st.title(title)
 
 
 def handle_chatbot_change():
@@ -48,48 +88,44 @@ if "chat_data" in st.session_state:
             st.write(bytes_data)
 
 
-def run_async_stream(coro):
-    loop = asyncio.new_event_loop()
-    asyncio.set_event_loop(loop)
-    return loop.run_until_complete(coro)
-
-
-async def stream_langgraph(messages):
-    output_text = ""
-
-    async for chunk in client.runs.stream(
-        None,  # threadless
-        "agent",  # assistant name from langgraph.json
-        input={"messages": messages},
-        stream_mode="updates",
-    ):
-        if chunk.event != "updates":
-            continue
-        model_data = chunk.data.get("model")
-        if not model_data:
-            continue
-        messages_list = model_data.get("messages", [])
-        if not messages_list:
-            continue
-        last_msg = messages_list[-1]
-        content = last_msg.get("content")
-        if content:
-            yield content
-
-
 user_input = st.chat_input("Ask something...")
 
 
-if user_input:
-    st.chat_message("user").write(user_input)
+for message in st.session_state.messages:
+    role = message.get("role", "ai")
+    with st.chat_message(role):
+        st.markdown(message["content"])
 
+if user_input:
+    st.chat_message("user").markdown(user_input)
+    user_message = {"role": "user", "content": user_input}
+    st.session_state.messages.append(user_message)
     assistant_box = st.chat_message("assistant")
     placeholder = assistant_box.empty()
+    tool_placeholder = assistant_box.container()
 
     async def consume():
-        async for partial in stream_langgraph(
-            [{"role": "human", "content": user_input}]
+        buffer = ""
+        tool_calls_rendered = set()
+        async for token in stream_langgraph(
+            [{"role": "human", "content": user_input}],
+            st.session_state.thread_id,
+            st.session_state.chat_data.url,
         ):
-            placeholder.markdown(partial)
+            content = token.get("content")
+            if content:
+                buffer += content
+                placeholder.markdown(buffer)
+            tool_calls = token.get("tool_calls")
+            if tool_calls:
+                for call in tool_calls:
+                    call_id = call.get("id")
+                    if call_id in tool_calls_rendered:
+                        continue
+                    tool_calls_rendered.add(call_id)
+                    with tool_placeholder:
+                        with st.expander(f"Tool call: `{call['name']}`", expanded=True):
+                            st.json(call["args"])
+            st.session_state.messages.append({"role": "assistant", "content": buffer})
 
     run_async_stream(consume())
