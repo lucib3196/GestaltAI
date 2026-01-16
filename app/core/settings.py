@@ -8,6 +8,10 @@ from pathlib import Path
 ENV = Literal["local", "production"]
 
 APP_ROOT = Path(__file__).resolve().parents[1]
+OUTPUT = Path(APP_ROOT / "output_downloads").resolve()
+
+if not OUTPUT.exists():
+    OUTPUT.mkdir()
 
 
 class AppSettings(BaseSettings):
@@ -71,10 +75,11 @@ class AppSettings(BaseSettings):
 @lru_cache
 def get_settings() -> AppSettings:
     """Cached settings instance (safe for Streamlit/FastAPI)."""
+
     return AppSettings(
         langgraph_production_url=os.getenv("langgraph_production", ""),
         langsmith_api_key=os.getenv("LANGSMITH_API_KEY", ""),
-        output_path=Path(APP_ROOT / "output_downloads").resolve(),
+        output_path=OUTPUT,
     )
 
 
