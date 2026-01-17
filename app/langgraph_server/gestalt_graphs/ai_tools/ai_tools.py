@@ -79,7 +79,7 @@ def prepare_zip(
     encoded = base64.b64encode(memory_file.read()).decode("utf-8")
 
     return {
-        "filename": zip_name,
+        "filename": zip_name, # type: ignore
         "mime_type": "application/zip",
         "zip_base64": encoded,
     }
