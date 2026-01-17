@@ -1,5 +1,5 @@
 from langgraph_sdk import get_client
-from app.core.settings import get_settings
+from core.settings import get_settings
 
 
 settings = get_settings()
