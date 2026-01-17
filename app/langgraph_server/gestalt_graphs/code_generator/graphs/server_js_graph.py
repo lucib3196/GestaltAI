@@ -72,8 +72,14 @@ class State(TypedDict):
 
 def retrieve_examples(state: State) -> Command[Literal["generate_code"]]:
 
-    retriever = vector_store.as_retriever(
-        search_type="similarity",
+    
+
+    question_html = state["question"].question_html
+    if not question_html:
+        question_html = state["question"].question_text
+
+    results = vector_store.similarity_search(
+        question_html,
         filter={
             "isAdaptive": state["isAdaptive"],
             "input_col": "question.html",
@@ -82,16 +88,9 @@ def retrieve_examples(state: State) -> Command[Literal["generate_code"]]:
         },
         k=2,
     )
-
-
-    question_html = state["question"].question_html
-    if not question_html:
-        question_html = state["question"].question_text
-
-    results = retriever.invoke(question_html)
     # Format docs
     formatted_docs = "\n".join(p.page_content for p in results)
-    print("These are the formatted docs",formatted_docs)
+    print("These are the formatted docs", formatted_docs)
     return Command(
         update={"formatted_examples": formatted_docs, "retrieved_documents": results},
         goto="generate_code",
