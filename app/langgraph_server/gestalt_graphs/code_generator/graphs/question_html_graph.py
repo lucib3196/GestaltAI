@@ -66,7 +66,7 @@ def retrieve_examples(state: State) -> Command[Literal["generate_code"]]:
     
     results = vector_store.similarity_search(
         question_text,
-        filter=filter
+        filter=filter,
         k=2,
     )
     # Format docs
