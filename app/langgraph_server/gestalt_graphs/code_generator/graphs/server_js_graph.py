@@ -80,14 +80,13 @@ def retrieve_examples(state: State) -> Command[Literal["generate_code"]]:
         "isAdaptive": state["isAdaptive"],
         "input_col": "question.html",
         "output_col": "server.js",
-        # "output_is_nan": False,
+        "output_is_nan": False,
     }
 
     print(filter)
     results = vector_store.similarity_search(question_html, k=2, filter=filter)
     # Format docs
     formatted_docs = "\n".join(p.page_content for p in results)
-    print("These are the formatted docs", formatted_docs)
     return Command(
         update={"formatted_examples": formatted_docs, "retrieved_documents": results},
         goto="generate_code",
@@ -200,7 +199,7 @@ if __name__ == "__main__":
     )
     input_state: State = {
         "question": question,
-        "isAdaptive": False,
+        "isAdaptive": True,
         "server_js": None,
         "retrieved_documents": [],
         "formatted_examples": "",
