@@ -211,7 +211,7 @@ if __name__ == "__main__":
     print(result["server_js"])
 
     # Save output
-    output_path = Path(r"langgraph_server/src/code_generator/outputs/server_js")
+    output_path = Path(r"langgraph_server/gestalt_graphs/code_generator/outputs/server_js")
     save_graph_visualization(app, output_path, filename="graph.png")
     data_path = output_path / "output.json"
     data_path.write_text(json.dumps(to_serializable(result)))
