@@ -3,7 +3,7 @@
   "dependencies": ["."],
   "graphs": {
     "question_classification": "./langgraph_server/gestalt_graphs/question_classification/agent.py:agent",
-    "agent_gestalt": "./langgraph_server/gestalt_graphs/code_generators/agents/agent_simple.py:agent"
+    "agent_gestalt": "./langgraph_server/gestalt_graphs/code_generator/agents/agent_simple.py:agent"
   },
   "env": ".env",
   "image_distro": "wolfi"
