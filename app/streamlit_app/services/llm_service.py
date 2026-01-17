@@ -1,6 +1,6 @@
 import streamlit as st
-from streamlit_app.client import client
-from streamlit_app.services.async_wrappers import run_async_stream
+from app.streamlit_app.client.client import client
+from app.streamlit_app.services.async_wrappers import run_async_stream
 
 
 async def get_thread_id():

@@ -1,7 +1,6 @@
 import streamlit as st
-from chat_modes import CHAT_OPTIONS
-from core.settings import ENV
-from chat_modes import (
+from app.core.settings import ENV
+from app.streamlit_app.chat_modes import (
     CHAT_OPTIONS,
     ChatOption,
 )

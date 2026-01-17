@@ -1,14 +1,14 @@
 import streamlit as st
-from core.settings import get_settings
+from app.core.settings import get_settings
 from pathlib import Path
-from streamlit_app.ui.layout import (
+from app.streamlit_app.ui.layout import (
     render_sidebar,
     render_title,
     render_chatbot_description,
     render_downloads,
 )
-from streamlit_app.state.session import init_session
-from streamlit_app.pages import chat
+from app.streamlit_app.state.session import init_session
+from app.streamlit_app.pages import chat
 
 settings = get_settings()
 

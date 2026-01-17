@@ -1,6 +1,5 @@
 import streamlit as st
-from streamlit_app.services.llm_service import initialize_thread_id
-from chat_modes import CHAT_OPTIONS
+from app.streamlit_app.services.llm_service import initialize_thread_id
 
 DEFAULT_STATE = {
     "messages": [],
