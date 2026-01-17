@@ -28,8 +28,8 @@ def render_ui():
     chat.render_chat()
     chat.render_chat_input()
 
-    # Render downloads if they exist
-    render_downloads(OUTPUT_DIR)
+    # # Render downloads if they exist
+    # render_downloads(OUTPUT_DIR)
 
 
 render_ui()

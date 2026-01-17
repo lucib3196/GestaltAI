@@ -1,6 +1,6 @@
 import streamlit as st
 from app.core.settings import ENV
-from app.streamlit_app.chat_modes import (
+from app.streamlit_app.config.chat_modes import (
     CHAT_OPTIONS,
     ChatOption,
 )
@@ -21,15 +21,15 @@ def render_title(env: ENV, thread_id: str | None = None):
 def render_sidebar() -> str | None:
     # Renders the labele for the option
     options = [k for k, v in CHAT_OPTIONS.items() if v.active]
-    with st.sidebar:
-        add_radio = st.radio(
-            label="Choose Chat Mode",
-            options=options,
-            index=None,
-            key="chat_select",
-            format_func=lambda k: CHAT_OPTIONS[k].label,
-            on_change=handle_chatbot_change,
-        )
+
+    add_radio = st.selectbox(
+        label="Choose Chat Mode",
+        options=options,
+        index=None,
+        key="chat_select",
+        format_func=lambda k: CHAT_OPTIONS[k].label,
+        on_change=handle_chatbot_change,
+    )
 
     return add_radio
 

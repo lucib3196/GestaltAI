@@ -7,15 +7,8 @@ CHAT_NAMES = Literal[
     "module_builder_text",
     "module_builder_image",
     "question_classifier",
-    "file_generator",
+    "gestalt_build_agent",
     "course_classifier",
-]
-OPTIONS: List[CHAT_NAMES] = [
-    # "module_builder_text",
-    # "module_builder_image",
-    "question_classifier",
-    "file_generator",
-    # "course_classifier",
 ]
 
 
@@ -39,10 +32,10 @@ CHAT_OPTIONS: Dict[CHAT_NAMES, ChatOption] = {
         description="Generate a complete multi-file module from image input.",
         mode="file",
     ),
-    "file_generator": ChatOption(
-        label="Single File Generator",
+    "gestalt_build_agent": ChatOption(
+        label="Gestalt Build Agent",
         url="agent_gestalt",
-        description="Generate a specific file with focused functionality.",
+        description="Incrementally generate individual or grouped educational files using Gestalt Tools ",
         active=True,
     ),
     "question_classifier": ChatOption(
