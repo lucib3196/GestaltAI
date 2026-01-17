@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Annotated, List, Literal, TypedDict, Dict
 
 # --- Local / Project Models ---
-from langgraph_server.gestalt_graphs.code_generator.models import (
+from gestalt_graphs.code_generator.models import (
     Question,
     CodeResponse,
 )
@@ -21,13 +21,13 @@ from langchain_core.prompts import ChatPromptTemplate
 # --- LangGraph ---
 from langgraph.graph import END, START, StateGraph
 from langgraph.types import Command
-from langgraph_server.gestalt_graphs.code_validation.graph import (
+from gestalt_graphs.code_validation.graph import (
     State as CodeValidationState,
     graph as code_validation_graph,
 )
 
 # --- Project Utilities ---
-from langgraph_server.gestalt_graphs.utils.utils import (
+from gestalt_graphs.utils.utils import (
     save_graph_visualization,
     to_serializable,
     extract_langsmith_prompt,

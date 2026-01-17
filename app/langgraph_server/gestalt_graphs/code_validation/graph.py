@@ -4,10 +4,10 @@ from langchain.chat_models import init_chat_model
 from langgraph.types import Command
 from typing import Annotated
 from operator import add
-from langgraph_server.gestalt_graphs.code_validation.models import CodeResponse, ValidationResult
+from gestalt_graphs.code_validation.models import CodeResponse, ValidationResult
 from pathlib import Path
 import json
-from langgraph_server.gestalt_graphs.utils.utils import save_graph_visualization, to_serializable
+from gestalt_graphs.utils.utils import save_graph_visualization, to_serializable
 
 model = init_chat_model(
     model="gpt-4o",

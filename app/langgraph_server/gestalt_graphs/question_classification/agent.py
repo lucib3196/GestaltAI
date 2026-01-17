@@ -1,7 +1,7 @@
 from langchain.tools import tool
 from langchain.agents import create_agent
 from langchain.chat_models import init_chat_model
-from langgraph_server.gestalt_graphs.question_classification.graph import app, State as CState
+from gestalt_graphs.question_classification.graph import app, State as CState
 
 model = init_chat_model(
     model="gpt-4o",
