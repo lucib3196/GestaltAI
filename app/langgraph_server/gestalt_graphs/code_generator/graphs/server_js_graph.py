@@ -74,7 +74,7 @@ def retrieve_examples(state: State) -> Command[Literal["generate_code"]]:
 
     retriever = vector_store.as_retriever(
         search_type="similarity",
-        kwargs={
+        filter={
             "isAdaptive": state["isAdaptive"],
             "input_col": "question.html",
             "output_col": "server.js",
@@ -83,6 +83,7 @@ def retrieve_examples(state: State) -> Command[Literal["generate_code"]]:
         k=2,
     )
 
+
     question_html = state["question"].question_html
     if not question_html:
         question_html = state["question"].question_text
@@ -90,6 +91,7 @@ def retrieve_examples(state: State) -> Command[Literal["generate_code"]]:
     results = retriever.invoke(question_html)
     # Format docs
     formatted_docs = "\n".join(p.page_content for p in results)
+    print("These are the formatted docs",formatted_docs)
     return Command(
         update={"formatted_examples": formatted_docs, "retrieved_documents": results},
         goto="generate_code",
@@ -211,7 +213,9 @@ if __name__ == "__main__":
     print(result["server_js"])
 
     # Save output
-    output_path = Path(r"langgraph_server/gestalt_graphs/code_generator/outputs/server_js")
+    output_path = Path(
+        r"langgraph_server/gestalt_graphs/code_generator/outputs/server_js"
+    )
     save_graph_visualization(app, output_path, filename="graph.png")
     data_path = output_path / "output.json"
     data_path.write_text(json.dumps(to_serializable(result)))

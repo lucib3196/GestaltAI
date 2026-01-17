@@ -57,7 +57,7 @@ class State(TypedDict):
 def retrieve_examples(state: State) -> Command[Literal["generate_code"]]:
     retriever = vector_store.as_retriever(
         search_type="similarity",
-        kwargs={
+        filter={
             "isAdaptive": state["isAdaptive"],
             "input_col": "question",
             "output_col": "question.html",
