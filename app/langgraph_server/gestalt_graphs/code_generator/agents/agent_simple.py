@@ -19,16 +19,23 @@ from langgraph_server.gestalt_graphs.code_generator.graphs.server_js_graph impor
 
 # --- Internal: Models ---
 from langgraph_server.gestalt_graphs.code_generator.models import Question
+from langgraph_server.gestalt_graphs.code_generator.graphs.solution_html_graph import (
+    app as solution_html_tool,
+    State as SolutionState,
+)
 
 # --- Internal: Prompts ---
 from langgraph_server.gestalt_graphs.code_generator.prompts.prompts import (
-    QUESTION_HTML_PROMPT,GESTALT_AGENT
+    GESTALT_AGENT,
 )
 
 # --- Internal: Tools ---
 from langgraph_server.gestalt_graphs.ai_tools.ai_tools import (
     prepare_zip,
-    save_file,
+)
+from langgraph_server.gestalt_graphs.code_generator.graphs.server_py_graph import (
+    app as server_py_generator,
+    State as PyState,
 )
 
 
@@ -134,12 +141,143 @@ def generate_server_js(
         "formatted_examples": "",
     }
     result = server_js_tool.invoke(input_state)
-    server = {"server_jd": result.get("server_js")}
+    server = {"server_js": result.get("server_js")}
     retrieved_context: List[Document] = result.get("retrieved_documents", [])
     return server, retrieved_context
 
 
-tools = [generate_question_html, prepare_zip, generate_server_js]
+@tool
+def generate_server_py(
+    question_html: str,
+    solution_guide: Optional[str] = None,
+):
+    """
+    Generate a fully structured `server.py` file that implements the backend
+    logic for an adaptive question, grounded in retrieved reference examples.
+
+    This tool takes a complete `question.html` file and an optional
+    solution guide, and synthesizes the Python code required to:
+    - Generate dynamic parameters at runtime
+    - Compute correct answers programmatically
+    - Expose values and results to the frontend question interface
+
+    The `isAdaptive` flag determines whether runtime parameter generation
+    and computation logic should be included:
+    - If `isAdaptive=True`, the generated Python code MUST include logic
+      for dynamic parameter generation and answer computation.
+    - If `isAdaptive=False`, the Python backend should be minimal or omitted,
+      depending on platform conventions.
+
+    It returns TWO things:
+    1. A generated `server.py` file containing the backend computation and
+       parameter-generation logic for the question.
+    2. The set of retrieved reference documents used to guide the structure,
+       patterns, and conventions of the generated Python code.
+
+    The retrieved documents serve as grounding context and are intended for
+    internal inspection, debugging, or traceability. They SHOULD NOT be exposed
+    to end users unless explicitly requested.
+
+    Use this tool when:
+    - You are generating backend logic for an adaptive question using Python.
+    - A finalized and educator-approved `question.html` already exists.
+    - The question requires runtime parameter generation or computation.
+    - The backend logic must follow established Python-side conventions.
+
+    The retrieved examples MUST inform the structure and patterns of the output,
+    but MUST NOT be copied verbatim. The generated Python code should be
+    original, readable, and ready for direct use within the platform’s
+    execution environment.
+    """
+    question = Question(
+        question_text="",
+        solution_guide=solution_guide,
+        final_answer=None,
+        question_html=question_html,
+    )
+    input_state: PyState = {
+        "question": question,
+        "isAdaptive": True,
+        "server_py": None,
+        "retrieved_documents": [],
+        "formatted_examples": "",
+    }
+    result = server_py_generator.invoke(input_state)
+    server = {"server_py": result.get("server_py")}
+    retrieved_context: List[Document] = result.get("retrieved_documents", [])
+    return server, retrieved_context
+
+
+@tool
+def generate_solution_html(
+    question_html: str, solution_guide: Optional[str] = None, isAdaptive: bool = False
+):
+    """
+    Generate a fully structured `solution.html` file that presents the
+    step-by-step solution and final answer for a question, grounded in
+    retrieved reference examples.
+
+    This tool takes a **complete `question.html` file** as its primary
+    reference and an optional **solution guide**, and synthesizes a
+    platform-compliant `solution.html` that:
+    - Explains the reasoning and steps required to solve the question
+    - References variables, symbols, and structure defined in `question.html`
+    - Presents results clearly for both adaptive and non-adaptive questions
+
+    The `isAdaptive` flag indicates whether the question’s values are
+    dynamically generated at runtime:
+    - If `isAdaptive=True`, the solution is written generically and symbolically
+      to remain valid across parameter variations.
+    - If `isAdaptive=False`, the solution may include concrete values and
+      fixed computations.
+
+    It returns TWO things:
+    1. A generated `solution.html` file containing the structured explanation,
+       derivation, and final answer presentation.
+    2. The set of retrieved reference documents used to guide formatting,
+       structure, and instructional patterns.
+
+    The retrieved documents serve as **grounding context** and are intended for
+    internal inspection, debugging, or traceability. They SHOULD NOT be exposed
+    to end users unless explicitly requested.
+
+    Use this tool when:
+    - A finalized `question.html` already exists.
+    - You need a clear, pedagogically sound solution presentation.
+    - The solution must align structurally and semantically with the question.
+    - The question may be adaptive or non-adaptive, controlled via `isAdaptive`.
+
+    The retrieved examples MUST inform the structure and instructional style
+    of the output, but MUST NOT be copied verbatim. The generated solution HTML
+    should be original, readable, and ready for direct use within the
+    platform’s rendering environment.
+    """
+    question = Question(
+        question_text="",
+        solution_guide=solution_guide,
+        final_answer=None,
+        question_html=question_html,
+    )
+    input_state: SolutionState = {
+        "question": question,
+        "isAdaptive": isAdaptive,
+        "solution_html": None,
+        "retrieved_documents": [],
+        "formatted_examples": "",
+    }
+    result = solution_html_tool.invoke(input_state)
+    server = {"solution_html": result.get("solution_html")}
+    retrieved_context: List[Document] = result.get("retrieved_documents", [])
+    return server, retrieved_context
+
+
+tools = [
+    generate_question_html,
+    prepare_zip,
+    generate_server_js,
+    generate_solution_html,
+    generate_server_py,
+]
 
 agent = create_agent(
     model,
