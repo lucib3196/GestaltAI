@@ -3,7 +3,7 @@ import json
 import operator
 import os
 from pathlib import Path
-from typing import Annotated, List, Literal, TypedDict
+from typing import Annotated, List, Literal, TypedDict,Dict
 
 # --- Local / Project Models ---
 from langgraph_server.gestalt_graphs.code_generator.models import (
@@ -72,21 +72,22 @@ class State(TypedDict):
 
 def retrieve_examples(state: State) -> Command[Literal["generate_code"]]:
 
-    
-
     question_html = state["question"].question_html
     if not question_html:
         question_html = state["question"].question_text
 
-    results = vector_store.similarity_search(
-        question_html,
-        filter={
+    filter = {
             "isAdaptive": state["isAdaptive"],
             "input_col": "question.html",
             "output_col": "server.js",
             "output_is_nan": False,
         },
+    
+    print(filter)
+    results = vector_store.similarity_search(
+        question_html,
         k=2,
+        filter=filter
     )
     # Format docs
     formatted_docs = "\n".join(p.page_content for p in results)
