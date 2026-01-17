@@ -70,7 +70,7 @@ def send_message(prompt: str):
                         continue
                     tool_calls_rendered.add(call_id)
                     with tool_placeholder:
-                        with st.expander(f"Tool call: `{call['name']}`", expanded=True):
+                        with st.expander(f"Tool call: `{call['name']}`", expanded=False):
                             st.json(call["args"])
             st.session_state.messages.append({"role": "assistant", "content": buffer})
 

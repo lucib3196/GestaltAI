@@ -82,8 +82,6 @@ def retrieve_examples(state: State) -> Command[Literal["generate_code"]]:
         "output_col": "server.js",
         "output_is_nan": False,
     }
-
-    print(filter)
     results = vector_store.similarity_search(question_html, k=2, filter=filter)
     # Format docs
     formatted_docs = "\n".join(p.page_content for p in results)
