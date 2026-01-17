@@ -13,6 +13,7 @@ source = { editable = "." }
 dependencies = [
     { name = "langgraph" },
     { name = "python-dotenv" },
+    { name = "langchain" },
 ]
 
 [package.optional-dependencies]

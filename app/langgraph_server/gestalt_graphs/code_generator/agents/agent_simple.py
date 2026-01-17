@@ -8,7 +8,7 @@ from langgraph_server.gestalt_graphs.ai_tools.ai_tools import save_file
 
 # --- LangChain & OpenAI ---
 from langchain.agents import create_agent
-from langchain.tools import tool
+from langchain_core.tools import tool
 from langchain.chat_models import init_chat_model
 from typing import List
 
