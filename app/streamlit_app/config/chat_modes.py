@@ -4,7 +4,7 @@ from typing import Dict, Literal, List
 ALLOWED_MODE = Literal["text", "file"]
 
 CHAT_NAMES = Literal[
-    "module_builder_text",
+    "gestalt_module_builder",
     "module_builder_image",
     "question_classifier",
     "gestalt_build_agent",
@@ -21,22 +21,33 @@ class ChatOption(BaseModel):
 
 
 CHAT_OPTIONS: Dict[CHAT_NAMES, ChatOption] = {
-    "module_builder_text": ChatOption(
-        label="Module Builder (Text)",
-        url="/moc/module-builder",
-        description="Generate a complete multi-file module from text input.",
+    "gestalt_module_builder": ChatOption(
+        label="Gestalt Module Builder",
+        url="agent_gestalt_module",
+        description=(
+            "Generate a complete, ready-to-use Gestalt module in one pass. "
+            "This tool creates and packages all required files "
+            "(question.html, solution.html, server logic, and metadata) "
+            "from finalized text input, with minimal iteration."
+        ),
+        active=True,
+    ),
+    "gestalt_build_agent": ChatOption(
+        label="Gestalt Build Agent",
+        url="agent_gestalt",
+        description=(
+            "Incrementally generate and refine individual or grouped files "
+            "(question.html, solution.html, server logic, metadata) using "
+            "Gestalt’s modular, tool-based workflow. Designed for "
+            "fine-grained control, iteration, and targeted file generation."
+        ),
+        active=True,
     ),
     "module_builder_image": ChatOption(
         label="Module Builder (Image)",
         url="/moc/module-builder",
         description="Generate a complete multi-file module from image input.",
         mode="file",
-    ),
-    "gestalt_build_agent": ChatOption(
-        label="Gestalt Build Agent",
-        url="agent_gestalt",
-        description="Incrementally generate individual or grouped educational files using Gestalt Tools ",
-        active=True,
     ),
     "question_classifier": ChatOption(
         label="Question Classifier",

@@ -8,11 +8,11 @@ from app.streamlit_app.config import CHAT_NAMES
 class DefaultState(BaseModel):
     messages: List[Any] = []
     thread_id: str
-    chat_select: CHAT_NAMES
+    chat_select: CHAT_NAMES | None
 
 
 DEFAULT_STATE = DefaultState(
-    messages=[], thread_id=initialize_thread_id(), chat_select="module_builder_text"
+    messages=[], thread_id=initialize_thread_id(), chat_select=None
 )
 
 

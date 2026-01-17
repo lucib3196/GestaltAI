@@ -4,9 +4,8 @@ from typing import List, Literal
 from langgraph_server.gestalt_graphs.models.models import CodeResponse
 
 allowed_files = Literal["question.html", "solution.html", "server.js", "server.py"]
-question_types = Literal[
-    "computational",
-    "static",
+QuestionTypes = Literal[
+    "conceptual", "computational", "derivation", "analysis", "design"
 ]
 
 
@@ -22,7 +21,6 @@ class Question(BaseModel):
     question_html: str
 
 
-
 class ExtractedQuestion(BaseModel):
     """
     A general-purpose representation of a question and its solution extracted
@@ -36,7 +34,7 @@ class ExtractedQuestion(BaseModel):
         ..., description="The raw question extracted from the source material."
     )
 
-    qtype: question_types = Field(
+    qtype: QuestionTypes = Field(
         ...,
         description=(
             "The detected type of the question (e.g., 'conceptual', 'computational', "

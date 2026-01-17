@@ -3,7 +3,7 @@ import json
 import operator
 import os
 from pathlib import Path
-from typing import Annotated, List, Literal, TypedDict, Dict
+from typing import Annotated, List, Literal, TypedDict
 
 # --- Local / Project Models ---
 from langgraph_server.gestalt_graphs.code_generator.models import (
@@ -30,12 +30,12 @@ from langgraph_server.gestalt_graphs.code_validation.graph import (
 from langgraph_server.gestalt_graphs.utils.utils import (
     save_graph_visualization,
     to_serializable,
-    extract_langsmith_prompt,
 )
 
 
 # --- External Services ---
 from langsmith import Client
+
 
 model = init_chat_model(
     model="gpt-4o",
@@ -44,6 +44,12 @@ model = init_chat_model(
 embeddings = OpenAIEmbeddings(
     model=os.getenv("EMBEDDINGS", ""),
 )
+client = Client()
+base_prompt = client.pull_prompt("solution_html_graph_prompt")
+if isinstance(base_prompt, str):
+    prompt: ChatPromptTemplate = ChatPromptTemplate.from_template(base_prompt)
+else:
+    prompt: ChatPromptTemplate = base_prompt
 
 vector_store = AstraDBVectorStore(
     collection_name="gestalt_module",
@@ -53,35 +59,26 @@ vector_store = AstraDBVectorStore(
     namespace=os.getenv("ASTRA_DB_KEYSPACE", None),
 )
 
-client = Client()
-base_prompt = client.pull_prompt("server_js_graph_prompt")
-if isinstance(base_prompt, str):
-    prompt: ChatPromptTemplate = ChatPromptTemplate.from_template(base_prompt)
-else:
-    prompt: ChatPromptTemplate = base_prompt
-
 
 class State(TypedDict):
     question: Question
     isAdaptive: bool
-    server_js: str | None
+    solution_html: str | None
 
     retrieved_documents: Annotated[List[Document], operator.add]
     formatted_examples: str
 
 
 def retrieve_examples(state: State) -> Command[Literal["generate_code"]]:
-
-    question_html = state["question"].question_html
-    if not question_html:
-        question_html = state["question"].question_text
-
     filter = {
         "isAdaptive": state["isAdaptive"],
         "input_col": "question.html",
         "output_col": "server.js",
         "output_is_nan": False,
     }
+    question_html = state["question"].question_html
+    if not question_html:
+        question_html = state["question"].question_text
     results = vector_store.similarity_search(question_html, k=2, filter=filter)
     # Format docs
     formatted_docs = "\n".join(p.page_content for p in results)
@@ -92,40 +89,36 @@ def retrieve_examples(state: State) -> Command[Literal["generate_code"]]:
 
 
 def generate_code(state: State):
-    solution = state["question"].solution_guide
-    examples = state["formatted_examples"]
-
     question_html = state["question"].question_html
     if not question_html:
         question_html = state["question"].question_text
-
+    solution = state["question"].solution_guide
+    examples = state["formatted_examples"]
     messages = prompt.format_prompt(
         question=question_html, examples=examples, solution=solution
     ).to_messages()
 
     structured_model = model.with_structured_output(CodeResponse)
-    server = structured_model.invoke(messages)
-    server = CodeResponse.model_validate(server)
-    return {"server_js": server.code}
+    solution_html = structured_model.invoke(messages)
+    solution_html = CodeResponse.model_validate(solution_html)
+    return {"solution_html": solution_html.code}
 
 
-def solution_present(state: State) -> Literal["validate_solution", "improve_code"]:
+def solution_present(state: State) -> Literal["validate_solution", "END"]:
     if state["question"].solution_guide:
         return "validate_solution"
-    return "improve_code"
+    return "END"
 
 
 def validate_solution(state: State):
     solution_guide = state["question"].solution_guide
 
     input_state: CodeValidationState = {
-        "prompt": (
-            "You are tasked with analyzing the following Javascript server file. "
-            "Verify that the generated code is valid, consistent, and follows "
-            "the logic described in the provided solution guide.\n\n"
-            f"Solution Guide:\n{solution_guide}"
-        ),
-        "generated_code": state["server_js"] or "",
+        "prompt": f"""You are tasked with analyzing the following HTML file 
+            "containing a solution guide. Verify that the solution guide 
+            "HTML correctly follows the provided solution.
+            "Solution Guide {solution_guide } """,
+        "generated_code": state["solution_html"] or "",
         "validation_errors": [],
         "refinement_count": 0,
         "final_code": "",
@@ -133,36 +126,9 @@ def validate_solution(state: State):
 
     # Run the code validation refinement graph
     result = code_validation_graph.invoke(input_state)  # type: ignore
-
     final_code = result["final_code"]
 
-    return {"server_js": final_code}
-
-
-def improve_code(state: State):
-    input_state: CodeValidationState = {
-        "prompt": (
-            "You are tasked with reviewing and improving the following Python "
-            "server file. Your goal is to ensure that the code is correct, "
-            "numerically consistent, and integrates dynamic unit handling "
-            "based on the problem statement.\n\n"
-            "Carefully analyze the logic, verify alignment with the solution "
-            "guide, and update the code to properly account for variable units, "
-            "scaling factors, or engineering constants that may be required.\n\n"
-            f"General Guidelines for Server File Guide:\n{extract_langsmith_prompt(base_prompt)}"
-        ),
-        "generated_code": state.get("server_js", "") or "",
-        "validation_errors": [],
-        "refinement_count": 0,
-        "final_code": "",
-    }
-
-    # Execute the refinement / validation graph
-    result = code_validation_graph.invoke(input_state)  # type: ignore
-
-    final_code = result["final_code"]
-
-    return {"server_js": final_code}
+    return {"solution_html": final_code}
 
 
 workflow = StateGraph(State)
@@ -170,19 +136,15 @@ workflow = StateGraph(State)
 workflow.add_node("retrieve_examples", retrieve_examples)
 workflow.add_node("generate_code", generate_code)
 workflow.add_node("validate_solution", validate_solution)
-workflow.add_node("improve_code", improve_code)
-# Connect
 # Connect
 workflow.add_edge(START, "retrieve_examples")
 workflow.add_conditional_edges(
     "generate_code",
     solution_present,
-    {"improve_code": "improve_code", "validate_solution": "validate_solution"},
+    {"END": END, "validate_solution": "validate_solution"},
 )
-workflow.add_edge("validate_solution", "improve_code")
-workflow.add_edge("improve_code", END)
+workflow.add_edge("validate_solution", END)
 workflow.add_edge("retrieve_examples", END)
-
 
 # memory = MemorySaver()
 # app = workflow.compile(checkpointer=memory)
@@ -193,21 +155,21 @@ if __name__ == "__main__":
         question_text="A car is traveling along a straight rode at a constant speed of 100mph for 5 hours calculate the total distance traveled",
         solution_guide=None,
         final_answer=None,
-        question_html="",
+        question_html="A car is traveling along a straight rode at a constant speed of 100mph for 5 hours calculate the total distance traveled",
     )
     input_state: State = {
         "question": question,
         "isAdaptive": True,
-        "server_js": None,
+        "solution_html": None,
         "retrieved_documents": [],
         "formatted_examples": "",
     }
     result = app.invoke(input_state, config=config)  # type: ignore
-    print(result["server_js"])
+    print(result["solution_html"])
 
     # Save output
     output_path = Path(
-        r"langgraph_server/gestalt_graphs/code_generator/outputs/server_js"
+        r"langgraph_server/gestalt_graphs/code_generator/outputs/solution_html"
     )
     save_graph_visualization(app, output_path, filename="graph.png")
     data_path = output_path / "output.json"

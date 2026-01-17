@@ -11,6 +11,7 @@ from langgraph_server.gestalt_graphs.code_generator.models import (
     CodeResponse,
 )
 
+
 # --- LangChain Integrations ---
 from langchain_openai import OpenAIEmbeddings
 from langchain_astradb import AstraDBVectorStore
@@ -54,7 +55,7 @@ vector_store = AstraDBVectorStore(
 )
 
 client = Client()
-base_prompt = client.pull_prompt("server_js_graph_prompt")
+base_prompt = client.pull_prompt("server_py_graph_prompt")
 if isinstance(base_prompt, str):
     prompt: ChatPromptTemplate = ChatPromptTemplate.from_template(base_prompt)
 else:
@@ -64,7 +65,7 @@ else:
 class State(TypedDict):
     question: Question
     isAdaptive: bool
-    server_js: str | None
+    server_py: str | None
 
     retrieved_documents: Annotated[List[Document], operator.add]
     formatted_examples: str
@@ -79,7 +80,7 @@ def retrieve_examples(state: State) -> Command[Literal["generate_code"]]:
     filter = {
         "isAdaptive": state["isAdaptive"],
         "input_col": "question.html",
-        "output_col": "server.js",
+        "output_col": "server.py",
         "output_is_nan": False,
     }
     results = vector_store.similarity_search(question_html, k=2, filter=filter)
@@ -106,7 +107,7 @@ def generate_code(state: State):
     structured_model = model.with_structured_output(CodeResponse)
     server = structured_model.invoke(messages)
     server = CodeResponse.model_validate(server)
-    return {"server_js": server.code}
+    return {"server_py": server.code}
 
 
 def solution_present(state: State) -> Literal["validate_solution", "improve_code"]:
@@ -120,12 +121,12 @@ def validate_solution(state: State):
 
     input_state: CodeValidationState = {
         "prompt": (
-            "You are tasked with analyzing the following Javascript server file. "
+            "You are tasked with analyzing the following Python server file. "
             "Verify that the generated code is valid, consistent, and follows "
             "the logic described in the provided solution guide.\n\n"
             f"Solution Guide:\n{solution_guide}"
         ),
-        "generated_code": state["server_js"] or "",
+        "generated_code": state["server_py"] or "",
         "validation_errors": [],
         "refinement_count": 0,
         "final_code": "",
@@ -136,7 +137,7 @@ def validate_solution(state: State):
 
     final_code = result["final_code"]
 
-    return {"server_js": final_code}
+    return {"server_py": final_code}
 
 
 def improve_code(state: State):
@@ -151,7 +152,7 @@ def improve_code(state: State):
             "scaling factors, or engineering constants that may be required.\n\n"
             f"General Guidelines for Server File Guide:\n{extract_langsmith_prompt(base_prompt)}"
         ),
-        "generated_code": state.get("server_js", "") or "",
+        "generated_code": state.get("server_py", "") or "",
         "validation_errors": [],
         "refinement_count": 0,
         "final_code": "",
@@ -162,7 +163,7 @@ def improve_code(state: State):
 
     final_code = result["final_code"]
 
-    return {"server_js": final_code}
+    return {"server_py": final_code}
 
 
 workflow = StateGraph(State)
@@ -198,16 +199,16 @@ if __name__ == "__main__":
     input_state: State = {
         "question": question,
         "isAdaptive": True,
-        "server_js": None,
+        "server_py": None,
         "retrieved_documents": [],
         "formatted_examples": "",
     }
     result = app.invoke(input_state, config=config)  # type: ignore
-    print(result["server_js"])
+    print(result["server_py"])
 
     # Save output
     output_path = Path(
-        r"langgraph_server/gestalt_graphs/code_generator/outputs/server_js"
+        r"langgraph_server/gestalt_graphs/code_generator/outputs/server_py"
     )
     save_graph_visualization(app, output_path, filename="graph.png")
     data_path = output_path / "output.json"
