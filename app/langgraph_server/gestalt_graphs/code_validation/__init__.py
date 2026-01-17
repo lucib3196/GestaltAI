@@ -1,1 +1,1 @@
-from gestalt_graphs.models.models import CodeResponse
+from langgraph_server.gestalt_graphs.models.models import CodeResponse

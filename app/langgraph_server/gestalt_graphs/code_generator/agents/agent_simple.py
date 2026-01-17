@@ -1,10 +1,10 @@
-from gestalt_graphs.code_generator.graphs.question_html_graph import (
+from langgraph_server.gestalt_graphs.code_generator.graphs.question_html_graph import (
     app as question_html_tool,
     State as QState,
 )
-from gestalt_graphs.code_generator.models import Question
+from langgraph_server.gestalt_graphs.code_generator.models import Question
 from langchain_core.documents import Document
-from gestalt_graphs.ai_tools.ai_tools import save_file
+from langgraph_server.gestalt_graphs.ai_tools.ai_tools import save_file
 
 # --- LangChain & OpenAI ---
 from langchain.agents import create_agent
@@ -13,7 +13,7 @@ from langchain.chat_models import init_chat_model
 from typing import List
 
 # --- Pydantic ---
-from gestalt_graphs.code_generator.prompts.prompts import QUESTION_HTML_PROMPT
+from langgraph_server.gestalt_graphs.code_generator.prompts.prompts import QUESTION_HTML_PROMPT
 
 model = init_chat_model(
     model="gpt-4o",
