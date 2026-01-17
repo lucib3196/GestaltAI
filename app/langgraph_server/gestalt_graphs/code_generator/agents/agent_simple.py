@@ -4,7 +4,7 @@ from langgraph_server.gestalt_graphs.code_generator.graphs.question_html_graph i
 )
 from langgraph_server.gestalt_graphs.code_generator.models import Question
 from langchain_core.documents import Document
-from langgraph_server.gestalt_graphs.ai_tools.ai_tools import save_file
+from langgraph_server.gestalt_graphs.ai_tools.ai_tools import save_file,prepare_zip
 
 # --- LangChain & OpenAI ---
 from langchain.agents import create_agent
@@ -68,7 +68,7 @@ def generate_question_html(question: str, isAdaptive: bool):
     return html, retrieved_context
 
 
-tools = [generate_question_html, save_file]
+tools = [generate_question_html, prepare_zip]
 
 agent = create_agent(
     model,
