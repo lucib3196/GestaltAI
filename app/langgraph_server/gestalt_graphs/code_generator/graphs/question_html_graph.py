@@ -3,7 +3,7 @@ import operator
 import os
 from pathlib import Path
 from typing import Annotated, List, Literal, TypedDict
-from langgraph_server.src.code_generator.models import Question, CodeResponse
+from langgraph_server.gestalt_graphs.code_generator.models import Question, CodeResponse
 from langchain_openai import OpenAIEmbeddings
 from langchain_astradb import AstraDBVectorStore
 from langchain.chat_models import init_chat_model
@@ -11,7 +11,7 @@ from langchain_core.documents import Document
 from langchain_core.prompts import ChatPromptTemplate
 from langgraph.graph import END, START, StateGraph
 from langgraph.types import Command
-from langgraph_server.src.utils.utils import save_graph_visualization, to_serializable
+from langgraph_server.gestalt_graphs.utils.utils import save_graph_visualization, to_serializable
 
 
 # --- External Services ---
