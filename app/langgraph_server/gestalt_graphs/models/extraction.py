@@ -3,6 +3,9 @@ from typing import List
 from .question import QuestionTypes
 from .models import PageRange, Option
 
+# --- Standard Library ---
+from typing import Optional, List
+
 
 class ExtractedQuestion(BaseModel):
     """
@@ -146,3 +149,50 @@ class Derivation(BaseModel):
             f"**Steps:**\n{steps_formatted}\n\n"
             f"**Reference:** {self.reference}\n"
         )
+
+
+class LectureAnalysis(BaseModel):
+    lecture_title: str = Field(
+        ...,
+        description="A concise, descriptive title summarizing the main focus of the lecture.",
+    )
+
+    lecture_summary: str = Field(
+        ...,
+        description=(
+            "A concise, high-level summary of the lecture, written in clear "
+            "pedagogical language. Should capture the main ideas, not details."
+        ),
+    )
+
+    core_topics: List[str] = Field(
+        ...,
+        description=(
+            "A list of the primary concepts or topics covered in the lecture. "
+            "Each item should be a short noun phrase (e.g., 'Bernoulli equation')."
+        ),
+    )
+
+    learning_objectives: List[str] = Field(
+        ...,
+        description=(
+            "What a student should understand or be able to do after the lecture. "
+            "Each objective should start with an action verb (e.g., 'derive', 'explain')."
+        ),
+    )
+
+    assumed_prerequisites: Optional[List[str]] = Field(
+        default=None,
+        description=(
+            "Concepts or courses the lecture assumes prior knowledge of "
+            "(e.g., 'basic calculus', 'Newtonian mechanics')."
+        ),
+    )
+
+    lecture_type: Optional[str] = Field(
+        default=None,
+        description=(
+            "The primary nature of the lecture, such as 'conceptual', "
+            "'derivation-heavy', 'computational', or 'mixed'."
+        ),
+    )
