@@ -18,7 +18,7 @@ from langgraph_server.gestalt_graphs.code_generator.graphs.server_js_graph impor
 )
 
 # --- Internal: Models ---
-from langgraph_server.gestalt_graphs.code_generator.models import Question
+from langgraph_server.gestalt_graphs.models  import Question
 from langgraph_server.gestalt_graphs.code_generator.graphs.solution_html_graph import (
     app as solution_html_tool,
     State as SolutionState,

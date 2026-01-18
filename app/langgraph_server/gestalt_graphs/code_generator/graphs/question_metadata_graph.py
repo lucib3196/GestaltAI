@@ -5,7 +5,7 @@ from typing import List, TypedDict, Literal
 from pydantic import BaseModel
 
 # --- Local / Project Models ---
-from langgraph_server.gestalt_graphs.code_generator.models import (
+from langgraph_server.gestalt_graphs.models  import (
     Question,
     QuestionTypes,
 )

@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Annotated, List, Literal, TypedDict, Dict
 
 # --- Local / Project Models ---
-from langgraph_server.gestalt_graphs.code_generator.models import (
+from langgraph_server.gestalt_graphs.models  import (
     Question,
     CodeResponse,
 )

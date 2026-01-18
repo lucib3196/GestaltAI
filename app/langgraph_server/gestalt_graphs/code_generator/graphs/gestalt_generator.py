@@ -29,9 +29,7 @@ from langgraph_server.gestalt_graphs.code_generator.graphs.server_py_graph impor
     app as server_py_generator,
     State as PyState,
 )
-from langgraph_server.gestalt_graphs.code_generator.models import (
-    Question,
-)
+from langgraph_server.gestalt_graphs.models import Question
 from langgraph_server.gestalt_graphs.code_generator.graphs.question_metadata_graph import (
     QuestionMetaData,
 )

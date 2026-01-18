@@ -1,7 +1,7 @@
 from langchain.agents import create_agent
 from langchain_core.tools import tool
 
-from langgraph_server.gestalt_graphs.code_generator.models import Question
+from langgraph_server.gestalt_graphs.models  import Question
 from langgraph_server.gestalt_graphs.code_generator.prompts.prompts import (
     GESTALT_EDUCATOR_AGENT_PROMPT,
 )
