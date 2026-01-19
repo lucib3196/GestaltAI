@@ -196,3 +196,30 @@ class LectureAnalysis(BaseModel):
             "'derivation-heavy', 'computational', or 'mixed'."
         ),
     )
+
+    def as_string(self) -> str:
+        topics_formatted = "\n".join(f"- {topic}" for topic in self.core_topics)
+        objectives_formatted = "\n".join(
+            f"{i+1}. {obj}" for i, obj in enumerate(self.learning_objectives)
+        )
+
+        prereqs_formatted = (
+            "\n".join(f"- {p}" for p in self.assumed_prerequisites)
+            if self.assumed_prerequisites
+            else "None specified"
+        )
+
+        lecture_type_str = self.lecture_type or "Not specified"
+
+        return (
+            f"## {self.lecture_title}\n\n"
+            f"**Lecture Type:** {lecture_type_str}\n\n"
+            f"### Summary\n"
+            f"{self.lecture_summary}\n\n"
+            f"### Core Topics\n"
+            f"{topics_formatted}\n\n"
+            f"### Learning Objectives\n"
+            f"{objectives_formatted}\n\n"
+            f"### Assumed Prerequisites\n"
+            f"{prereqs_formatted}\n"
+        )

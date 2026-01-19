@@ -1,6 +1,8 @@
 graphrag/christmas
+app/langgraph_server/data
 .env
 output_downloads
+app/langgraph_server/gestalt_graphs/lecture_processing/transport_lecture
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

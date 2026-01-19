@@ -1,0 +1,127 @@
+{
+  "lecture_pdf": "C:/Github/GestaltAI/app/langgraph_server/data/Lecture_02_03.pdf",
+  "lecture_analysis": {
+    "lecture_title": "Hydrostatics in Accelerating and Rotating Containers: Free\u2011surface Shape, Pressure Distribution, and Buoyancy Stability",
+    "lecture_summary": "The lecture analyzes fluid hydrostatics in non-inertial frames: first for a container undergoing linear acceleration (horizontal and vertical components) and then for a container rotating about its axis. It develops the pressure-gradient formulation in accelerating frames, uses those gradients to determine the free\u2011surface shape (tilted plane for linear acceleration, paraboloid for rotation), and computes resulting fluid volumes and centroids. The material also covers how these changes affect buoyancy and stability of floating bodies (center of buoyancy, metacentric considerations) and includes practical notes on volumetric flow and unit conversions.",
+    "core_topics": [
+      "Hydrostatic pressure in non\u2011inertial frames",
+      "Pressure gradients under linear acceleration",
+      "Tilted free surface in accelerating container",
+      "Pressure distribution in rotating fluids",
+      "Parabolic free surface (rotating fluid)",
+      "Volume and centroid calculations for tilted/parabolic surfaces",
+      "Buoyancy: center of buoyancy and submerged volume",
+      "Metacentric stability criteria (GM) for floating bodies",
+      "Critical rotation/acceleration conditions for spill or instability",
+      "Volumetric flow definition and unit conversions"
+    ],
+    "learning_objectives": [
+      "explain how linear acceleration and gravity combine to set hydrostatic pressure gradients",
+      "derive the slope and shape of a free surface in a container undergoing horizontal/vertical acceleration",
+      "derive the parabolic free\u2011surface shape for a rotating fluid and relate it to rotation rate",
+      "compute fluid pressure distributions from the hydrostatic gradients in accelerating or rotating frames",
+      "calculate submerged volume and centroid for containers with tilted or parabolic free surfaces",
+      "assess buoyant force location (center of buoyancy) and use metacentric concepts to evaluate stability under acceleration",
+      "determine conditions (acceleration or rotation speed) that cause spillover or change stability",
+      "apply volumetric flow relations and convert between common units (m^3/s, liters/s, gallons)"
+    ],
+    "assumed_prerequisites": [
+      "basic fluid statics (pressure and hydrostatic law)",
+      "multivariable calculus and integration",
+      "rigid\u2011body mechanics and non\u2011inertial (accelerating) reference frames",
+      "cylindrical coordinates and basic geometry"
+    ],
+    "lecture_type": "mixed"
+  },
+  "extracted_questions": [],
+  "derivations": [
+    {
+      "derivation_title": "Free-surface shape of a fluid in a rotating cylindrical container (paraboloid) and volume",
+      "derivation_stub": "Derive the free-surface profile z(r) for steady rotation with angular speed \\(\\omega\\) and compute the fluid volume in the container: \\(z(r)=\\dfrac{\\omega^{2}r^{2}}{2g}+C\\), \\(V=\\dfrac{\\pi\\omega^{2}R^{4}}{4g}+\\pi z_{0}R^{2}\\)",
+      "steps": [
+        "1) Problem setup: axisymmetric fluid rotating steadily about the vertical axis with angular speed \\(\\omega\\). Use cylindrical coordinates \\((r,\\theta,z)\\). Body accelerations: radial outward acceleration \\(a_{r}=\\omega^{2}r\\), vertical acceleration \\(a_{z}=-g\\).",
+        "2) Hydrostatic equilibrium in a rotating frame (no motion relative to rotating frame): the pressure gradient balances body acceleration: \\(\\nabla p = \\rho \\mathbf{a}_{body}\\). In components:",
+        "   - radial: $$\\frac{\\partial p}{\\partial r}=\\rho\\,\\omega^{2}r$$",
+        "   - vertical: $$\\frac{\\partial p}{\\partial z}=-\\rho g.$$",
+        "3) Integrate the radial equation with respect to \\(r\\) (treating \\(z\\) constant):",
+        "   $$p(r,z)=\\rho\\frac{\\omega^{2}r^{2}}{2}+f(z),$$",
+        "   where \\(f(z)\\) is an arbitrary function of \\(z\\).",
+        "4) Use the vertical equation to determine \\(f(z)\\):",
+        "   $$\\frac{\\partial p}{\\partial z}=f'(z)=-\\rho g \\quad\\Rightarrow\\quad f(z)=-\\rho g z + C,$$",
+        "   so the full pressure field is",
+        "   $$p(r,z)=\\rho\\left(\\frac{\\omega^{2}r^{2}}{2}-gz\\right)+C.$$",
+        "5) Free surface condition: at the free surface \\(p= p_{a}\\) (constant atmospheric). Solve for \\(z(r)\\):",
+        "   $$p_{a}=\\rho\\left(\\frac{\\omega^{2}r^{2}}{2}-g z(r)\\right)+C \\quad\\Rightarrow\\quad z(r)=\\frac{\\omega^{2}r^{2}}{2g}+\\frac{C-p_{a}}{\\rho g}.$$",
+        "   Write the additive constant as \\(z_{0}\\) (height at \\(r=0\\) or determined by volume conservation):",
+        "   $$\\boxed{\\;z(r)=\\dfrac{\\omega^{2}r^{2}}{2g}+z_{0}\\; }$$",
+        "6) Compute the fluid volume above a chosen datum (use cylindrical shells). For a container radius \\(R\\):",
+        "   $$V=\\displaystyle 2\\pi\\int_{0}^{R} r\\,z(r)\\,dr = 2\\pi\\int_{0}^{R} r\\left(\\frac{\\omega^{2}r^{2}}{2g}+z_{0}\\right)dr.$$",
+        "   Evaluate the integrals:",
+        "   $$V=2\\pi\\left(\\frac{\\omega^{2}}{2g}\\cdot\\frac{R^{4}}{4}+ z_{0}\\cdot\\frac{R^{2}}{2}\\right) = \\frac{\\pi\\omega^{2}R^{4}}{4g} + \\pi z_{0}R^{2}.$$",
+        "7) Use total-volume conservation (given fixed total liquid volume) to solve for \\(z_{0}\\) (not fully expanded in the notes): if the mean (initial) height without rotation is \\(H\\), then the known volume \\(V=\\pi R^{2}H\\) gives",
+        "   $$\\pi R^{2}H = \\frac{\\pi\\omega^{2}R^{4}}{4g}+\\pi z_{0}R^{2} \\;\\Rightarrow\\; z_{0}=H-\\frac{\\omega^{2}R^{2}}{4g}.$$",
+        "   Substitute back to obtain the free-surface with the constant matching the prescribed volume.",
+        "8) Final boxed results (derived):",
+        "   - Free-surface profile: $$\\displaystyle z(r)=\\frac{\\omega^{2}r^{2}}{2g}+\\left(H-\\frac{\\omega^{2}R^{2}}{4g}\\right)$$ (choosing \\(z\\) such that volume equals \\(\\pi R^{2}H\\)).",
+        "   - Volume decomposition (useful intermediate form): $$V=\\frac{\\pi\\omega^{2}R^{4}}{4g}+\\pi z_{0}R^{2}.$$",
+        "Completeness note: the derivation of \\(z(r)\\) and the volume integral are complete and present in the notes. The algebraic substitution to eliminate \\(z_{0}\\) using a given total volume is indicated but only briefly evaluated in the handwritten work (the step solving explicitly for \\(z_{0}\\) from \\(V\\) is straightforward and shown above).",
+        "Reference: pages 6\u201312 (rotating-fluid / paraboloid derivation and volume integrals)."
+      ],
+      "reference": { "start_page": 6, "end_page": 12 }
+    },
+    {
+      "derivation_title": "Free-surface slope for a fluid in a container accelerating horizontally",
+      "derivation_stub": "Derive slope of free surface for constant horizontal acceleration \\(a_{x}\\): $$\\dfrac{dz}{dx}=-\\dfrac{a_{x}}{g}\\quad\\Rightarrow\\quad \\tan\\theta=\\dfrac{a_{x}}{g}$$",
+      "steps": [
+        "1) Setup: container accelerates horizontally with acceleration \\(a_{x}\\) (body acceleration vector has horizontal component \\(a_{x}\\) and vertical \\(-g\\)).",
+        "2) Hydrostatic-like equilibrium with inertial body force: \\(\\partial p/\\partial x = -\\rho a_{x},\\quad \\partial p/\\partial z = -\\rho g\\).",
+        "3) On the free surface pressure is constant (\\(p=p_{a}\\)). Differentiate the free-surface equation implicitly: along the free surface dp=0 so",
+        "   $$0 = \\frac{\\partial p}{\\partial x}dx + \\frac{\\partial p}{\\partial z}dz = -\\rho a_{x}dx - \\rho g\\,dz.$$",
+        "4) Rearranged: $$\\frac{dz}{dx} = -\\frac{a_{x}}{g}.$$ Thus the free surface is a plane tilted by angle \\(\\theta\\) with",
+        "   $$\\tan\\theta = \\frac{a_{x}}{g}.$$",
+        "Completeness note: derivation is complete and clearly shown in the notes (pages 2\u20133).",
+        "Reference: pages 2\u20135 (accelerating-container section)."
+      ],
+      "reference": { "start_page": 2, "end_page": 5 }
+    },
+    {
+      "derivation_title": "Volume-conservation relations for wedge-shaped free surface under horizontal acceleration (heights H1, H2, H3)",
+      "derivation_stub": "Relate heights at sections when free surface is a tilted plane (used to find where fluid reaches top or to find critical acceleration): algebraic relations between \\(H_{1},H_{2},H_{3}\\) from geometry and constant volume.",
+      "steps": [
+        "1) Geometry: free surface is planar with slope \\(\\tan\\theta=a_{x}/g\\). The container length is \\(L\\). Heights at three equal-length segments (or selected subdivisions) are labeled \\(H_{1},H_{2},H_{3}\\) as in the sketches.",
+        "2) Use linear variation of free-surface height along x to write heights at segment midpoints in terms of \\(H_{0}\\) and \\(\\tan\\theta\\).",
+        "3) Volume conservation: equate the sum of volumes of the subdivided prisms/trapezoids to the known total liquid volume \\(W L\\) (where \\(W\\) is width or cross-section). This yields algebraic relations such as (handwritten):",
+        "   - e.g. \\(H_{1}=\\dfrac{H_{2}+H_{3}}{2}\\) (from linear profile) and other linear relations used in the notes.",
+        "4) Solve linear system to express unknown heights in terms of initial mean height \\(H\\) and \\(\\tan\\theta\\) (or directly \\(a_{x}/g\\)).",
+        "Completeness note: the notes show the geometric setup and intermediate algebra leading to expressions for \\(H_{1},H_{2},H_{3}\\). The algebraic elimination is sketched but some arithmetic simplification steps are abbreviated in the handwriting.",
+        "Reference: pages 3\u20135 (wedge-volume calculations)."
+      ],
+      "reference": { "start_page": 3, "end_page": 5 }
+    },
+    {
+      "derivation_title": "Pressure component balance on a small cylindrical element (derivation of radial pressure gradient in rotating coordinates)",
+      "derivation_stub": "Infinitesimal equilibrium on a small curved wedge element in cylindrical coordinates to get \\(\\partial p/\\partial r=\\rho\\omega^{2}r\\) and vertical relation \\(\\partial p/\\partial z=-\\rho g\\).",
+      "steps": [
+        "1) Consider a small wedge element at radius \\(r\\) with extent \\(\\delta r,\\delta\\theta,\\delta z\\). Write pressure forces acting on inner and outer radial faces and body force from rotation.",
+        "2) Balance radial forces (sum of radial pressure components + inertial/radial body force = 0): leads to",
+        "   $$\\frac{\\partial p}{\\partial r}=\\rho\\omega^{2}r.$$",
+        "3) Balance vertical forces gives the familiar hydrostatic vertical relation",
+        "   $$\\frac{\\partial p}{\\partial z}=-\\rho g.$$",
+        "Completeness note: the elemental force-balance derivation is shown in the sketches and algebra on pages 9\u201311 and supports the main rotating-fluid derivation above.",
+        "Reference: pages 9\u201311."
+      ],
+      "reference": { "start_page": 9, "end_page": 11 }
+    },
+    {
+      "derivation_title": "Buoyancy / submerged volume considerations for a floating cylinder under horizontal acceleration (stability sketch)",
+      "derivation_stub": "Sketches and short equations applying buoyancy and submerged-volume concepts to a floating cylinder (used earlier in the notes to find stability lengths and centres of buoyancy).",
+      "steps": [
+        "1) Problem sketches show a floating cylinder of length \\(L\\), diameter \\(D\\), and wood density \\(\\rho_{wood}\\). The submerged length \\(L_{s}\\) is related by Archimedes: \\(\\rho_{water} \\pi D^{2}/4 \\cdot L_{s}=\\rho_{wood}\\pi D^{2}/4\\cdot L\\) i.e. \\(L_{s}=\\dfrac{\\rho_{wood}}{\\rho_{w}}L\\).",
+        "2) Stability considerations: centre of mass (GM) and centre of buoyancy (BC) positions sketched; algebra in notes checks sign of \\(GM\\) and \\(I_{c}-BC\\) etc. (hand-sketched derivation).",
+        "Completeness note: this section is sketchy and used qualitatively in the notes; specifics for a particular geometry are abbreviated on page 1.",
+        "Reference: page 1."
+      ],
+      "reference": { "start_page": 1, "end_page": 1 }
+    }
+  ]
+}
